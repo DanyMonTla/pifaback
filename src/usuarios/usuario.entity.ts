@@ -26,8 +26,8 @@ export class Usuario {
   @Column({ name: 'NID_ROL', type: 'int' })
   idRol: number;
 
-  @Column({ name: 'BTITULO_USUARIO', type: 'varchar', length: 10, nullable: true })
-  tituloUsuario?: string;
+  @Column({ name: 'BITTITULO_USUARIO', type: 'varchar', length: 10, nullable: true })
+  tituloUsuario: string;
 
   @Column({ name: 'BHABILITADO', type: 'bit' })
   habilitado: boolean;
