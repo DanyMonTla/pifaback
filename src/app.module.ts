@@ -5,6 +5,7 @@ import { InidicadoresModule } from './inidicadores/inidicadores.module';
 import { IndicadoresController } from './indicadores/indicadores.controller';
 import { IndicadoresService } from './indicadores/indicadores.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       //database: "test",
       //synchronize: true,
      // entities: [__dirname + '/**/*.entity.ts' ],
-    InidicadoresModule],
+    InidicadoresModule,
+    UsuariosModule],
   controllers: [AppController, IndicadoresController],
   providers: [AppService, IndicadoresService],
 })
