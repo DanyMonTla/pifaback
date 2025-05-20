@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'TBL_USUARIOS' })
+@Entity({ name: 'usuarios' })
 export class Usuario {
   @PrimaryColumn({ name: 'CID_USUARIO', type: 'char', length: 6 })
   idUsuario: string;

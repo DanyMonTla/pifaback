@@ -1,36 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { Usuario } from './usuario.entity';
 
 @Injectable()
 export class UsuariosService {
-  private usuarios: CreateUsuarioDto[] = [];
+  constructor(
+    @InjectRepository(Usuario)
+    private readonly usuarioRepo: Repository<Usuario>,
+  ) {}
 
-
-  create(createUsuarioDto: CreateUsuarioDto) {
-    this.usuarios.push(createUsuarioDto);
-    return createUsuarioDto;
+  async create(dto: CreateUsuarioDto): Promise<Usuario> {
+    const nuevo = this.usuarioRepo.create(dto);
+    return this.usuarioRepo.save(nuevo);
   }
 
-  findAll() {
-    return this.usuarios;
+  findAll(): Promise<Usuario[]> {
+    return this.usuarioRepo.find();
   }
 
-  findOne(id: string) {
-    return this.usuarios.find(u => u.idUsuario === id);
+ findOne(id: string): Promise<Usuario | null> {
+  return this.usuarioRepo.findOneBy({ idUsuario: id });
+}
+
+
+  async update(id: string, updateDto: UpdateUsuarioDto): Promise<Usuario | null> {
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    if (!usuario) return null;
+
+    const actualizado = { ...usuario, ...updateDto };
+    return this.usuarioRepo.save(actualizado);
   }
 
-  update(id: string, updateUsuarioDto: UpdateUsuarioDto) {
-    const userIndex = this.usuarios.findIndex(u => u.idUsuario === id);
-    if (userIndex === -1) return null;
-    this.usuarios[userIndex] = { ...this.usuarios[userIndex], ...updateUsuarioDto };
-    return this.usuarios[userIndex];
-  }
+  async remove(id: string): Promise<Usuario | null> {
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    if (!usuario) return null;
 
-  remove(id: string) {
-    const userIndex = this.usuarios.findIndex(u => u.idUsuario === id);
-    if (userIndex === -1) return null;
-    const removed = this.usuarios.splice(userIndex, 1);
-    return removed[0];
+    await this.usuarioRepo.remove(usuario);
+    return usuario;
   }
 }
