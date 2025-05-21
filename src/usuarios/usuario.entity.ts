@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
-@Entity({ name: 'usuarios' })
+@Entity({ name: 'TBL_USUARIOS' })
 export class Usuario {
   @PrimaryColumn({ name: 'CID_USUARIO', type: 'char', length: 6 })
   idUsuario: string;
@@ -25,8 +25,8 @@ export class Usuario {
 
   @Column({ name: 'NID_ROL', type: 'int' })
   idRol: number;
-
-  @Column({ name: 'BITTITULO_USUARIO', type: 'varchar', length: 10, nullable: true })
+  
+  @Column({ name: 'BTITULO_USUARIO', type: 'varchar', length: 10, nullable: true })
   tituloUsuario: string;
 
   @Column({ name: 'BHABILITADO', type: 'bit' })
