@@ -22,13 +22,12 @@ export class UsuariosService {
     return this.usuarioRepo.find();
   }
 
- findOne(id: string): Promise<Usuario | null> {
-  return this.usuarioRepo.findOneBy({ idUsuario: id });
-}
-
+  findOne(id: string): Promise<Usuario | null> {
+    return this.usuarioRepo.findOneBy({ idUsuario: Number(id) });
+  }
 
   async update(id: string, updateDto: UpdateUsuarioDto): Promise<Usuario | null> {
-    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: Number(id) });
     if (!usuario) return null;
 
     const actualizado = { ...usuario, ...updateDto };
@@ -36,7 +35,7 @@ export class UsuariosService {
   }
 
   async remove(id: string): Promise<Usuario | null> {
-    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: Number(id) });
     if (!usuario) return null;
 
     await this.usuarioRepo.remove(usuario);

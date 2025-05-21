@@ -2,8 +2,7 @@ import { IsString, IsInt, IsBoolean, IsOptional, IsDate } from 'class-validator'
 import { Type } from 'class-transformer';
 
 export class CreateUsuarioDto {
-  @IsString()
-  readonly idUsuario: string;
+
 
   @IsString()
   readonly nombreUsuario: string;

@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'TBL_USUARIOS' })
 export class Usuario {
-  @PrimaryColumn({ name: 'CID_USUARIO', type: 'char', length: 6 })
-  idUsuario: string;
+   @PrimaryColumn({ name: 'CID_USUARIO', type: 'int' }) // <-- Cambia a int y autoincrement
+  idUsuario: number;
 
   @Column({ name: 'CNOMBRE_USUARIO', type: 'varchar', length: 50 })
   nombreUsuario: string;
@@ -25,7 +25,7 @@ export class Usuario {
 
   @Column({ name: 'NID_ROL', type: 'int' })
   idRol: number;
-  
+
   @Column({ name: 'BTITULO_USUARIO', type: 'varchar', length: 10, nullable: true })
   tituloUsuario: string;
 
