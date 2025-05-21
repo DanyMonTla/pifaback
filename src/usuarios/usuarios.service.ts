@@ -42,4 +42,18 @@ export class UsuariosService {
     await this.usuarioRepo.remove(usuario);
     return usuario;
   }
+
+  async actualizarEstado(id: string, nuevoEstado: string) {
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    if (!usuario) throw new Error('Usuario no encontrado');
+
+    usuario.estado = nuevoEstado;
+    await this.usuarioRepo.save(usuario);
+
+    return { mensaje: 'Estado actualizado correctamente' };
+}
+
+
+
+
 }

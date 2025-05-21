@@ -6,6 +6,9 @@ export class CreateUsuarioDto {
   readonly idUsuario: string;
 
   @IsString()
+  readonly usuario: string;
+
+  @IsString()
   readonly nombreUsuario: string;
 
   @IsString()
@@ -25,6 +28,10 @@ export class CreateUsuarioDto {
 
   @IsInt()
   readonly idRol: number;
+
+  @IsString()
+  readonly correoUsuario: string;
+  
 
   @IsOptional()
   @IsString()

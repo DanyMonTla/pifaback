@@ -5,6 +5,9 @@ export class Usuario {
   @PrimaryColumn({ name: 'CID_USUARIO', type: 'char', length: 6 })
   idUsuario: string;
 
+  @Column({ name: 'CUSUARIO', type: 'varchar', length: 20 })
+  usuario: string;
+
   @Column({ name: 'CNOMBRE_USUARIO', type: 'varchar', length: 50 })
   nombreUsuario: string;
 
@@ -25,6 +28,9 @@ export class Usuario {
 
   @Column({ name: 'NID_ROL', type: 'int' })
   idRol: number;
+
+  @Column({ name: 'CCORREO_USUARIO', type: 'varchar', length: 50 })
+  correoUsuario: string;
   
   @Column({ name: 'BTITULO_USUARIO', type: 'varchar', length: 10, nullable: true })
   tituloUsuario: string;
@@ -37,4 +43,8 @@ export class Usuario {
 
   @Column({ name: 'DFECHA_BAJA', type: 'datetime', nullable: true })
   fechaBaja?: Date;
+
+  @Column({ type: 'varchar', length: 10 })
+  estado: string;
+
 }
