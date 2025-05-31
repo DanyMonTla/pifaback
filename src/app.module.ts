@@ -13,6 +13,7 @@ import { IndicadoresService } from './indicadores/indicadores.service';
 
 // Módulo de Usuarios
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { ProgramaPresupuestalModule } from './ProgramaPresupuestal/ProgramaPresupuestal.module';
 
 
 
@@ -34,6 +35,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 
     InidicadoresModule,
     UsuariosModule,
+    ProgramaPresupuestalModule,
   ],
   controllers: [AppController, IndicadoresController],
   providers: [AppService, IndicadoresService],

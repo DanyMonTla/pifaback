@@ -29,8 +29,10 @@ export class Usuario {
   @Column({ name: 'BTITULO_USUARIO', length: 10, nullable: true })
   tituloUsuario: string;
 
-  @Column({ name: 'BHABILITADO', type: 'bit' })
-  habilitado: boolean;
+  @Column({ name: 'BHABILITADO', type: 'tinyint', width: 1 })
+habilitado: boolean;
+
+
 
   @Column({ name: 'DFECHA_ALTA', type: 'datetime' })
   fechaAlta: Date;
