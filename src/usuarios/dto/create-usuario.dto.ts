@@ -1,51 +1,56 @@
-import { IsString, IsInt, IsBoolean, IsOptional, IsDate } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+  IsString,
+  IsBoolean,
+  IsDateString,
+  IsOptional,
+  IsInt,
+  Length,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateUsuarioDto {
   @IsString()
-  readonly idUsuario: string;
+  @Length(6, 6)
+  cid_usuario: string;
 
   @IsString()
-  readonly usuario: string;
+  @MaxLength(50)
+  cnombre_usuario: string;
 
   @IsString()
-  readonly nombreUsuario: string;
+  @MaxLength(25)
+  capellido_p_usuario: string;
 
   @IsString()
-  readonly apellidoPaterno: string;
+  @MaxLength(25)
+  capellido_m_usuario: string;
 
   @IsString()
-  readonly apellidoMaterno: string;
+  @MaxLength(20)
+  ccargo_usuario: string;
 
   @IsString()
-  readonly cargoUsuario: string;
-
-  @IsString()
-  readonly hashedPassword: string;
+  @Length(15, 15)
+  chashed_password: string;
 
   @IsInt()
-  readonly idArea: number;
+  nid_area: number;
 
   @IsInt()
-  readonly idRol: number;
+  nid_rol: number;
 
   @IsString()
-  readonly correoUsuario: string;
-  
-
+  @MaxLength(10)
   @IsOptional()
-  @IsString()
-  readonly tituloUsuario?: string;
+  btitulo_usuario?: string;
 
   @IsBoolean()
-  readonly habilitado: boolean;
+  bhabilitado: boolean;
 
-  @Type(() => Date)
-  @IsDate()
-  readonly fechaAlta: Date;
+  @IsDateString()
+  dfecha_alta: string;
 
+  @IsDateString()
   @IsOptional()
-  @Type(() => Date)
-  @IsDate()
-  readonly fechaBaja?: Date;
+  dfecha_baja?: string;
 }

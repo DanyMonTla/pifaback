@@ -1,13 +1,20 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+// App general
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
+// Módulo de Indicadores
 import { InidicadoresModule } from './inidicadores/inidicadores.module';
 import { IndicadoresController } from './indicadores/indicadores.controller';
 import { IndicadoresService } from './indicadores/indicadores.service';
+
+// Módulo de Usuarios
 import { UsuariosModule } from './usuarios/usuarios.module';
+
+
 
 @Module({
   imports: [
