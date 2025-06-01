@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Patch, Param, Body, Delete } from '@nestjs/common';
-import { IndicadoresService } from './indicadores.service';
-import { CreateIndicadorDto } from './dto/create-indicador.dto';
-import { UpdateIndicadorDto } from './dto/update-indicador.dto';
+import { FuenteService } from './fuente.service';
+import { CreateFuenteDto } from './dto/create-fuente.dto';
+import { UpdateFuenteDto } from './dto/update-fuente.dto';
 
-@Controller('indicadores')
-export class IndicadoresController {
-  constructor(private readonly service: IndicadoresService) {}
+@Controller('fuentes')
+export class FuenteController {
+  constructor(private readonly service: FuenteService) {}
 
   @Get()
   findAll() {
@@ -18,12 +18,12 @@ export class IndicadoresController {
   }
 
   @Post()
-  create(@Body() dto: CreateIndicadorDto) {
+  create(@Body() dto: CreateFuenteDto) {
     return this.service.create(dto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateIndicadorDto) {
+  update(@Param('id') id: string, @Body() dto: UpdateFuenteDto) {
     return this.service.update(Number(id), dto);
   }
 
