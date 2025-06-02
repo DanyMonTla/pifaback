@@ -39,8 +39,19 @@ export class UsuariosController {
     return this.service.update(id, dto);
   }
 
-  @Patch('estado/:id')
-  async desactivar(@Param('id') id: string) {
-    return this.service.desactivar(id);
+  @Patch(':id')
+  async patchUsuario(
+    @Param('id') id: string,
+    @Body() dto: Partial<UpdateUsuarioDto>
+  ) {
+    return this.service.update(id, dto);
+  }
+
+  @Patch('estado/:id') 
+  async desactivar(
+    @Param('id') id: string,
+    @Body() cambios: { bhabilitado: boolean; dfecha_baja: string }
+  ) {
+    return this.service.desactivar(id, cambios);
   }
 }

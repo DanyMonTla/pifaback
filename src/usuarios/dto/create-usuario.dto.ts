@@ -10,9 +10,8 @@ import {
 
 export class CreateUsuarioDto {
   @IsString()
-@Length(6, 6)
-cid_usuario: string;
-
+  @Length(6, 6)
+  cid_usuario: string;
 
   @IsString()
   @MaxLength(50)
@@ -31,9 +30,8 @@ cid_usuario: string;
   ccargo_usuario: string;
 
   @IsString()
-  @MaxLength(255)
+  @MaxLength(255) // Esto permite contraseñas encriptadas como bcrypt
   chashed_password: string;
-
 
   @IsInt()
   nid_area: number;
@@ -49,7 +47,7 @@ cid_usuario: string;
   @IsBoolean()
   bhabilitado: boolean;
 
-  @IsDateString()
+  @IsDateString() // Asegura que llegue como 'YYYY-MM-DD' o ISO date
   dfecha_alta: string;
 
   @IsDateString()

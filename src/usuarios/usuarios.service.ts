@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
@@ -13,6 +13,8 @@ export class UsuariosService {
   ) {}
 
   async create(dto: CreateUsuarioDto): Promise<Usuario> {
+    console.log("📥 DTO recibido en backend:", dto);
+
     const nuevo = this.usuarioRepo.create({
       idUsuario: dto.cid_usuario,
       nombreUsuario: dto.cnombre_usuario,
@@ -32,9 +34,19 @@ export class UsuariosService {
         : null,
     });
 
-    const guardado = await this.usuarioRepo.save(nuevo);
-    console.log("✅ Usuario guardado:", guardado);
-    return guardado;
+    try {
+      const guardado = await this.usuarioRepo.save(nuevo);
+      console.log("✅ Usuario guardado:", guardado);
+      return guardado;
+    } catch (err: any) {
+      console.error("❌ Error al guardar usuario en la BD:", err);
+
+      if (err.code === 'ER_DATA_TOO_LONG') {
+        throw new BadRequestException('Uno de los campos excede el tamaño permitido.');
+      }
+
+      throw err;
+    }
   }
 
   async findAll(): Promise<any[]> {
@@ -79,48 +91,34 @@ export class UsuariosService {
   }
 
   async update(id: string, dto: UpdateUsuarioDto): Promise<Usuario> {
-    try {
-      const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
-      if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
-
-      const fechaAlta =
-        dto.dfecha_alta && dto.dfecha_alta !== ''
-          ? new Date(dto.dfecha_alta)
-          : usuario.fechaAlta;
-      const fechaBaja =
-        dto.dfecha_baja && dto.dfecha_baja !== ''
-          ? new Date(dto.dfecha_baja)
-          : usuario.fechaBaja;
-
-      usuario.nombreUsuario = dto.cnombre_usuario ?? usuario.nombreUsuario;
-      usuario.apellidoP = dto.capellido_p_usuario ?? usuario.apellidoP;
-      usuario.apellidoM = dto.capellido_m_usuario ?? usuario.apellidoM;
-      usuario.cargoUsuario = dto.ccargo_usuario ?? usuario.cargoUsuario;
-      usuario.hashedPassword = dto.chashed_password ?? usuario.hashedPassword;
-      usuario.idArea = dto.nid_area ?? usuario.idArea;
-      usuario.idRol = dto.nid_rol ?? usuario.idRol;
-      usuario.tituloUsuario = dto.btitulo_usuario ?? usuario.tituloUsuario;
-      usuario.habilitado =
-        dto.bhabilitado !== undefined
-          ? Boolean(dto.bhabilitado)
-          : usuario.habilitado;
-      usuario.fechaAlta = fechaAlta;
-      usuario.fechaBaja = fechaBaja;
-
-      console.log('📝 Guardando usuario actualizado:', usuario);
-      return await this.usuarioRepo.save(usuario);
-    } catch (err) {
-      console.error('❌ Error interno al modificar usuario:', err);
-      throw err;
-    }
-  }
-
-  async desactivar(id: string): Promise<any> {
     const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
     if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
-    usuario.habilitado = false;
-    usuario.fechaBaja = new Date();
+    const fechaAlta = dto.dfecha_alta ? new Date(dto.dfecha_alta) : usuario.fechaAlta;
+    const fechaBaja = dto.dfecha_baja ? new Date(dto.dfecha_baja) : usuario.fechaBaja;
+
+    usuario.nombreUsuario = dto.cnombre_usuario ?? usuario.nombreUsuario;
+    usuario.apellidoP = dto.capellido_p_usuario ?? usuario.apellidoP;
+    usuario.apellidoM = dto.capellido_m_usuario ?? usuario.apellidoM;
+    usuario.cargoUsuario = dto.ccargo_usuario ?? usuario.cargoUsuario;
+    usuario.hashedPassword = dto.chashed_password ?? usuario.hashedPassword;
+    usuario.idArea = dto.nid_area ?? usuario.idArea;
+    usuario.idRol = dto.nid_rol ?? usuario.idRol;
+    usuario.tituloUsuario = dto.btitulo_usuario ?? usuario.tituloUsuario;
+    usuario.habilitado = dto.bhabilitado !== undefined ? dto.bhabilitado : usuario.habilitado;
+    usuario.fechaAlta = fechaAlta;
+    usuario.fechaBaja = fechaBaja;
+
+    console.log('📝 Guardando usuario actualizado:', usuario);
+    return await this.usuarioRepo.save(usuario);
+  }
+
+  async desactivar(id: string, cambios: { bhabilitado: boolean; dfecha_baja: string }): Promise<any> {
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
+
+    usuario.habilitado = cambios.bhabilitado;
+    usuario.fechaBaja = new Date(cambios.dfecha_baja);
 
     const guardado = await this.usuarioRepo.save(usuario);
 
