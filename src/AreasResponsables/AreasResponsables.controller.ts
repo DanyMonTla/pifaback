@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Put,
   Param,
   Body,
   NotFoundException,
@@ -33,17 +34,31 @@ export class AreasResponsablesController {
     return this.service.findOne(idNum);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() dto: UpdateAreaDto) {
     const idNum = parseInt(id);
     if (isNaN(idNum)) throw new NotFoundException('ID inválido');
     return this.service.update(idNum, dto);
   }
 
-  @Patch('estado/:id')
-  desactivar(@Param('id') id: string) {
-    const idNum = parseInt(id);
-    if (isNaN(idNum)) throw new NotFoundException('ID inválido');
-    return this.service.remove(idNum); // Eliminación lógica
-  }
+ @Patch('estado/:id')
+async desactivar(@Param('id') id: string) {
+  const idNum = parseInt(id);
+  if (isNaN(idNum)) throw new NotFoundException('ID inválido');
+
+  const area = await this.service.findOne(idNum);
+
+  const dto: UpdateAreaDto = {
+    bhabilitado: false,
+    dfecha_baja: new Date().toISOString(),
+    dfecha_alta: area.dfecha_alta?.toISOString(), // asegúrate que sea string
+    cunidad_responsable: area.cunidad_responsable,
+    creporta_a: area.creporta_a,
+    ccorreo_electronico_ur: area.ccorreo_electronico_ur,
+  };
+
+  return this.service.update(idNum, dto);
+}
+
+
 }

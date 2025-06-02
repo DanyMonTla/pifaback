@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 @Entity('TBL_USUARIOS')
 export class Usuario {
   @PrimaryColumn({ name: 'CID_USUARIO', type: 'char', length: 6 })
-  idUsuario: string;
+  idUsuario: number;
 
   @Column({ name: 'CNOMBRE_USUARIO', length: 50 })
   nombreUsuario: string;
