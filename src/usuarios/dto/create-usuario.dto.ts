@@ -30,8 +30,9 @@ export class CreateUsuarioDto {
   ccargo_usuario: string;
 
   @IsString()
-  @Length(15, 15)
+  @MaxLength(255)
   chashed_password: string;
+
 
   @IsInt()
   nid_area: number;

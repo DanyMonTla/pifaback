@@ -30,9 +30,10 @@ export class UsuariosController {
 
    @Post()
   create(@Body() dto: CreateUsuarioDto) {
-    console.log("📥 DTO recibido:", dto); // AGREGA ESTO
-    return this.service.create(dto);
-  }
+  console.log("📥 DTO recibido en POST /usuarios:", dto);
+  return this.service.create(dto);
+}
+
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {

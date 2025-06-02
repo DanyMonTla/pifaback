@@ -24,7 +24,7 @@ import { AreasResponsablesModule } from './AreasResponsables/AreasResponsables.m
       port: parseInt(process.env.DB_PORT || '3306'),
       username: process.env.DB_USERNAME || 'root',
       password: process.env.DB_PASSWORD || 'yat123',
-      database: process.env.DB_NAME || 'desa',
+      database: process.env.DB_NAME || 'pifa1', // ← actualizado aquí
       synchronize: false,
       autoLoadEntities: true,
     }),
@@ -33,7 +33,6 @@ import { AreasResponsablesModule } from './AreasResponsables/AreasResponsables.m
     ProgramaPresupuestalModule,
     RolesModule,
     AreasResponsablesModule,
-     
   ],
   controllers: [AppController, IndicadoresController],
   providers: [AppService, IndicadoresService],
