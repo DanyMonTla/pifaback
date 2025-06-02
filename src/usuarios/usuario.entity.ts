@@ -29,8 +29,11 @@ export class Usuario {
   @Column({ name: 'BTITULO_USUARIO', length: 10, nullable: true })
   tituloUsuario?: string;
 
-  @Column({ name: 'BHABILITADO', type: 'tinyint', width: 1, default: () => '1' })
+  
+  
+  @Column({name: 'BHABILITADO',type: 'bit',width: 1,default: () => '1',transformer: {to: (value: boolean) => value ? Buffer.from([1]) : Buffer.from([0]),from: (value: Buffer | number) => {if (Buffer.isBuffer(value)) return value[0] === 1;return !!value;},},})
   habilitado: boolean;
+
 
   @Column({ name: 'DFECHA_ALTA', type: 'datetime' })
   fechaAlta: Date;
