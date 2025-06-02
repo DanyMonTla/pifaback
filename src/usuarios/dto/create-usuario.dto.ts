@@ -10,8 +10,9 @@ import {
 
 export class CreateUsuarioDto {
   @IsString()
-  @Length(6, 6)
-  cid_usuario: number;
+@Length(6, 6)
+cid_usuario: string;
+
 
   @IsString()
   @MaxLength(50)

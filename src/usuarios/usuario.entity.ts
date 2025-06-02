@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity('TBL_USUARIOS')
 export class Usuario {
-  @PrimaryColumn({ name: 'CID_USUARIO', type: 'char', length: 6 })
-  idUsuario: number;
+ @PrimaryColumn({ name: 'CID_USUARIO', type: 'char', length: 6 })
+idUsuario: string; // ✅ CORRECTO
 
   @Column({ name: 'CNOMBRE_USUARIO', length: 50 })
   nombreUsuario: string;

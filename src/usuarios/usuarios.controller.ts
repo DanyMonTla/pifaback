@@ -36,32 +36,11 @@ export class UsuariosController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {
-    const idNum = parseInt(id);
-    if (isNaN(idNum)) throw new NotFoundException('ID inválido');
-    return this.service.update(idNum, dto);
+    return this.service.update(id, dto);
   }
 
   @Patch('estado/:id')
   async desactivar(@Param('id') id: string) {
-    const idNum = parseInt(id);
-    if (isNaN(idNum)) throw new NotFoundException('ID inválido');
-
-    const usuario = await this.service.findOne(id);
-
-    const dto: UpdateUsuarioDto = {
-      bhabilitado: false,
-      dfecha_baja: new Date().toISOString(),
-      dfecha_alta: usuario.dfecha_alta, // corregido
-      cnombre_usuario: usuario.cnombre_usuario,
-      capellido_p_usuario: usuario.capellido_p_usuario,
-      capellido_m_usuario: usuario.capellido_m_usuario,
-      ccargo_usuario: usuario.ccargo_usuario,
-      chashed_password: usuario.chashed_password,
-      nid_area: usuario.nid_area,
-      nid_rol: usuario.nid_rol,
-      btitulo_usuario: usuario.btitulo_usuario,
-    };
-
-    return this.service.update(idNum, dto);
+    return this.service.desactivar(id);
   }
 }
