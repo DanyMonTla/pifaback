@@ -12,9 +12,8 @@ import { IndicadoresController } from './indicadores/indicadores.controller';
 import { IndicadoresService } from './indicadores/indicadores.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { ProgramaPresupuestalModule } from './ProgramaPresupuestal/ProgramaPresupuestal.module';
-
-// Nuevo módulo de roles
 import { RolesModule } from './roles/roles.module';
+import { AreasResponsablesModule } from './AreasResponsables/AreasResponsables.module';
 
 @Module({
   imports: [
@@ -32,7 +31,9 @@ import { RolesModule } from './roles/roles.module';
     InidicadoresModule,
     UsuariosModule,
     ProgramaPresupuestalModule,
-    RolesModule, // ✅ Agregado aquí
+    RolesModule,
+    AreasResponsablesModule,
+     
   ],
   controllers: [AppController, IndicadoresController],
   providers: [AppService, IndicadoresService],
