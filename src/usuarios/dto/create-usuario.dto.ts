@@ -1,43 +1,60 @@
-import { IsString, IsInt, IsBoolean, IsOptional, IsDate } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+  IsString,
+  IsBoolean,
+  IsDateString,
+  IsOptional,
+  IsInt,
+  Length,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateUsuarioDto {
+<<<<<<< HEAD
 
+=======
+  @IsString()
+  @Length(6, 6)
+  cid_usuario: string;
+>>>>>>> origin/5pantallas-conectadas
 
   @IsString()
-  readonly nombreUsuario: string;
+  @MaxLength(50)
+  cnombre_usuario: string;
 
   @IsString()
-  readonly apellidoPaterno: string;
+  @MaxLength(25)
+  capellido_p_usuario: string;
 
   @IsString()
-  readonly apellidoMaterno: string;
+  @MaxLength(25)
+  capellido_m_usuario: string;
 
   @IsString()
-  readonly cargoUsuario: string;
+  @MaxLength(20)
+  ccargo_usuario: string;
 
   @IsString()
-  readonly hashedPassword: string;
+  @MaxLength(255) // Esto permite contraseñas encriptadas como bcrypt
+  chashed_password: string;
 
   @IsInt()
-  readonly idArea: number;
+  nid_area: number;
 
   @IsInt()
-  readonly idRol: number;
+  nid_rol: number;
 
+  @IsString()
+  @MaxLength(10)
   @IsOptional()
-  @IsString()
-  readonly tituloUsuario?: string;
+  btitulo_usuario?: string;
 
   @IsBoolean()
-  readonly habilitado: boolean;
+  bhabilitado: boolean;
 
-  @Type(() => Date)
-  @IsDate()
-  readonly fechaAlta: Date;
+  @IsDateString() // Asegura que llegue como 'YYYY-MM-DD' o ISO date
+  dfecha_alta: string;
 
+  @IsDateString()
   @IsOptional()
-  @Type(() => Date)
-  @IsDate()
-  readonly fechaBaja?: Date;
+  dfecha_baja?: string;
 }
