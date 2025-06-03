@@ -14,6 +14,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
 import { ProgramaPresupuestalModule } from './ProgramaPresupuestal/ProgramaPresupuestal.module';
 import { RolesModule } from './roles/roles.module';
 import { AreasResponsablesModule } from './AreasResponsables/AreasResponsables.module';
+import { TipoProgramaModule } from './tipo-programa/tipo-programa.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AreasResponsablesModule } from './AreasResponsables/AreasResponsables.m
     ProgramaPresupuestalModule,
     RolesModule,
     AreasResponsablesModule,
+    TipoProgramaModule,
   ],
   controllers: [AppController, IndicadoresController],
   providers: [AppService, IndicadoresService],
