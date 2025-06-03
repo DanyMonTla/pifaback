@@ -28,11 +28,13 @@ export class CreateIndicadorDto {
   @MaxLength(900)
   cdefinicion_indicador: string;
 
-  @IsInt()
-  nid_frecuencia: number;
+  // Nuevo campo
+  @IsString()
+  @MaxLength(500)
+  cfuente: string;
 
   @IsInt()
-  nid_fuente: number;
+  nid_frecuencia: number;
 
   @IsInt()
   nid_tipo_calculo: number;

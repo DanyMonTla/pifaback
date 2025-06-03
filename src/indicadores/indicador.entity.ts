@@ -29,11 +29,12 @@ export class Indicador {
   @Column({ name: 'CDEFINICION_INDICADOR', type: 'varchar', length: 900 })
   cdefinicion_indicador: string;
 
+  // Elimina NID_FUENTE y agrega CFUENTE:
+  @Column({ name: 'CFUENTE', type: 'varchar', length: 500, nullable: true })
+  cfuente: string;
+
   @Column({ name: 'NID_FRECUENCIA', type: 'int' })
   nid_frecuencia: number;
-
-  @Column({ name: 'NID_FUENTE', type: 'int' })
-  nid_fuente: number;
 
   @Column({ name: 'NID_TIPO_CALCULO', type: 'int' })
   nid_tipo_calculo: number;
