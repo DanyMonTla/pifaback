@@ -47,4 +47,6 @@ export class Indicador {
 
   @Column({ name: 'DFECHA_BAJA', type: 'datetime', nullable: true })
   dfecha_baja: Date | null;
+    @Column({ name: 'NID_CLASIFICACION', type: 'int' })
+  nid_clasificacion: number;
 }

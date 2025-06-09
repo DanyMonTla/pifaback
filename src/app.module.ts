@@ -7,7 +7,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 // Módulos existentes
-import { InidicadoresModule } from './inidicadores/inidicadores.module';
 import { IndicadoresController } from './indicadores/indicadores.controller';
 import { IndicadoresService } from './indicadores/indicadores.service';
 
@@ -21,6 +20,8 @@ import { FrecuenciaModule } from './frecuencia/frecuencia.module'; // <-- Agrega
 import { TipoCalculoModule } from './tipo-calculo/tipo-calculo.module';
 import { FuenteModule } from './fuente/fuente.module';
 import { TipoIndicadorModule } from './tipo-indicador/tipo-indicador.module';
+import { Clasificacion } from './clasificacion/clasificacion.entity';
+import { ClasificacionModule } from './clasificacion/clasificacion.module';
 
 
 @Module({
@@ -36,16 +37,8 @@ import { TipoIndicadorModule } from './tipo-indicador/tipo-indicador.module';
       synchronize: false,
       autoLoadEntities: true,
     }),
-    InidicadoresModule,
-      type: 'mariadb',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '3306'),
-      username: process.env.DB_USERNAME || 'root',
-      password: process.env.DB_PASSWORD || 'pifa123',
-      database: process.env.DB_NAME || 'pifa1',
-      synchronize: false,
-      autoLoadEntities: true,
-    }),
+  
+ 
 
     IndicadoresModule,
     UsuariosModule,
@@ -57,6 +50,7 @@ import { TipoIndicadorModule } from './tipo-indicador/tipo-indicador.module';
     TipoCalculoModule,
     FuenteModule,
     TipoIndicadorModule,
+    ClasificacionModule
   ],
   controllers: [AppController], // SOLO AppController aquí
   providers: [AppService], 

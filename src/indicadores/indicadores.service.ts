@@ -7,13 +7,19 @@ import { UpdateIndicadorDto } from './dto/update-indicador.dto';
 
 @Injectable()
 export class IndicadoresService {
+  async cambiarEstado(id: number, bhabilitado: number): Promise<Indicador> {
+  const record = await this.findOne(id);
+  record.bhabilitado = Boolean(bhabilitado);
+  return this.repo.save(record);
+}
+
   constructor(
     @InjectRepository(Indicador)
     private readonly repo: Repository<Indicador>,
   ) {}
 
-  findAll(): Promise<Indicador[]> {
-    return this.repo.find();
+  async findAll() {
+    return await this.repo.find();  // <---- SOLO USA "repo"
   }
 
   async findOne(id: number): Promise<Indicador> {

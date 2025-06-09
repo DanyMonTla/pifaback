@@ -16,7 +16,7 @@ export class UsuariosService {
     console.log("📥 DTO recibido en backend:", dto);
 
     const nuevo = this.usuarioRepo.create({
-      idUsuario: dto.cid_usuario,
+      idUsuario:  dto.cid_usuario,
       nombreUsuario: dto.cnombre_usuario,
       apellidoP: dto.capellido_p_usuario,
       apellidoM: dto.capellido_m_usuario,
@@ -52,15 +52,6 @@ export class UsuariosService {
     return usuarios.map(this.mapUsuario);
   }
 
-<<<<<<< HEAD
-  findOne(id: string): Promise<Usuario | null> {
-    return this.usuarioRepo.findOneBy({ idUsuario: Number(id) });
-  }
-
-  async update(id: string, updateDto: UpdateUsuarioDto): Promise<Usuario | null> {
-    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: Number(id) });
-    if (!usuario) return null;
-=======
   async findOne(id: string): Promise<any> {
     const u = await this.usuarioRepo.findOneBy({ idUsuario: id });
     if (!u) return null;
@@ -117,7 +108,6 @@ export class UsuariosService {
 }
 
 
->>>>>>> origin/5pantallas-conectadas
 
   private mapUsuario = (u: Usuario): any => ({
   cid_usuario: u.idUsuario,
@@ -133,12 +123,4 @@ export class UsuariosService {
   dfecha_alta: u.fechaAlta?.toISOString().slice(0, 16),
   dfecha_baja: u.fechaBaja?.toISOString().slice(0, 16) || '',
 });
-
-<<<<<<< HEAD
-  async remove(id: string): Promise<Usuario | null> {
-    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: Number(id) });
-    if (!usuario) return null;
-=======
->>>>>>> origin/5pantallas-conectadas
-
-}
+} 

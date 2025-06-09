@@ -9,13 +9,9 @@ import {
 } from 'class-validator';
 
 export class CreateUsuarioDto {
-<<<<<<< HEAD
-
-=======
   @IsString()
   @Length(6, 6)
   cid_usuario: string;
->>>>>>> origin/5pantallas-conectadas
 
   @IsString()
   @MaxLength(50)

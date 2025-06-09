@@ -37,6 +37,8 @@ export class CreateIndicadorDto {
   nid_frecuencia: number;
 
   @IsInt()
+  nid_clasificacion: number;
+  @IsInt()
   nid_tipo_calculo: number;
 
   @IsOptional()

@@ -14,18 +14,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 
 @Controller('usuarios')
 export class UsuariosController {
-<<<<<<< HEAD
-  constructor(private readonly usuariosService: UsuariosService) {}
-
-@Post()
-create(@Body() createUsuarioDto: CreateUsuarioDto) {
-  console.log('Petición recibida:', createUsuarioDto); // 👈
-  return this.usuariosService.create(createUsuarioDto);
-}
-
-=======
   constructor(private readonly service: UsuariosService) {}
->>>>>>> origin/5pantallas-conectadas
 
   @Get()
   findAll() {
