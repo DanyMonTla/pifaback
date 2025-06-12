@@ -13,9 +13,11 @@ export class RolesService {
   ) {}
 
   async create(dto: CreateRolDto): Promise<Rol> {
-    const nuevoRol = this.rolRepository.create(dto);
-    return this.rolRepository.save(nuevoRol);
-  }
+  console.log('🛠 DTO recibido en create:', dto); // 👈 esto es clave
+  const nuevoRol = this.rolRepository.create(dto);
+  return this.rolRepository.save(nuevoRol);
+}
+
 
   async findAll(): Promise<Rol[]> {
   return this.rolRepository.find(); // ✅ correcto
@@ -28,6 +30,15 @@ export class RolesService {
     }
     return rol;
   }
+
+   async reactivar(id: number): Promise<void> {
+  await this.rolRepository.update(id, {
+    bhabilitado: true,
+    dfechaBaja: null,
+  } as any);
+}
+
+
 
   async update(id: number, dto: UpdateRolDto): Promise<Rol> {
   const rol = await this.findOne(id);

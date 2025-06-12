@@ -2,10 +2,11 @@ import {
   IsString,
   IsBoolean,
   IsOptional,
-  IsDateString,
+  IsDate,
   IsInt,
   MaxLength,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateProgramaPresupuestalDto {
   @IsInt()
@@ -21,10 +22,13 @@ export class CreateProgramaPresupuestalDto {
   @IsBoolean()
   bhabilitado: boolean;
 
-  @IsDateString()
-  dfecha_alta: string;
+  @IsDate()
+  @Type(() => Date)
+  dfecha_alta: Date;
 
   @IsOptional()
-  @IsDateString()
-  dfecha_baja?: string;
+  @IsDate()
+  @Type(() => Date)
+  dfecha_baja?: Date | null;
+
 }
