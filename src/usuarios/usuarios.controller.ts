@@ -54,4 +54,10 @@ export class UsuariosController {
   ) {
     return this.service.desactivar(id, cambios);
   }
+
+  @Patch('reactivar/:id')
+async reactivar(@Param('id') id: string) {
+  return this.service.reactivar(id);
+}
+
 }

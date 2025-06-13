@@ -83,44 +83,54 @@ export class UsuariosService {
   }
 
   async desactivar(id: string, cambios: { bhabilitado: boolean; dfecha_baja: string }): Promise<any> {
-  const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
-  if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
-  // 👇 Debug para asegurarte que estás recibiendo lo que esperas
-  console.log("🛠 Cambios recibidos:", cambios);
+    console.log("🛠 Cambios recibidos:", cambios);
 
-  // 👇 Asegura que el valor false se respete
-  usuario.habilitado = cambios.bhabilitado;
+    usuario.habilitado = cambios.bhabilitado;
+    usuario.fechaBaja = cambios.dfecha_baja ? new Date(cambios.dfecha_baja) : null;
 
-  // 👇 Guarda la fecha correctamente
-  usuario.fechaBaja = cambios.dfecha_baja ? new Date(cambios.dfecha_baja) : null;
+    const guardado = await this.usuarioRepo.save(usuario);
+    console.log("✅ Usuario guardado con:", {
+      id: usuario.idUsuario,
+      habilitado: usuario.habilitado,
+      fechaBaja: usuario.fechaBaja,
+    });
 
-  const guardado = await this.usuarioRepo.save(usuario);
+    return this.mapUsuario(guardado);
+  }
 
-  // 👇 Confirma qué se va a guardar
-  console.log("✅ Usuario guardado con:", {
-    id: usuario.idUsuario,
-    habilitado: usuario.habilitado,
-    fechaBaja: usuario.fechaBaja,
-  });
+  // ✅ NUEVO MÉTODO PARA REACTIVAR USUARIO
+  async reactivar(id: string): Promise<any> {
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
-  return this.mapUsuario(guardado);
-}
+    usuario.habilitado = true;
+    usuario.fechaBaja = null;
 
+    const guardado = await this.usuarioRepo.save(usuario);
+    console.log("✅ Usuario reactivado:", {
+      id: usuario.idUsuario,
+      habilitado: usuario.habilitado,
+      fechaBaja: usuario.fechaBaja,
+    });
 
+    return this.mapUsuario(guardado);
+  }
 
   private mapUsuario = (u: Usuario): any => ({
-  cid_usuario: u.idUsuario,
-  cnombre_usuario: u.nombreUsuario,
-  capellido_p_usuario: u.apellidoP,
-  capellido_m_usuario: u.apellidoM,
-  ccargo_usuario: u.cargoUsuario,
-  chashed_password: u.hashedPassword,
-  nid_area: u.idArea,
-  nid_rol: u.idRol,
-  btitulo_usuario: u.tituloUsuario,
-  bhabilitado: typeof u.habilitado === 'boolean' ? u.habilitado : !!u.habilitado,
-  dfecha_alta: u.fechaAlta?.toISOString().slice(0, 16),
-  dfecha_baja: u.fechaBaja?.toISOString().slice(0, 16) || '',
-});
-} 
+    cid_usuario: u.idUsuario,
+    cnombre_usuario: u.nombreUsuario,
+    capellido_p_usuario: u.apellidoP,
+    capellido_m_usuario: u.apellidoM,
+    ccargo_usuario: u.cargoUsuario,
+    chashed_password: u.hashedPassword,
+    nid_area: u.idArea,
+    nid_rol: u.idRol,
+    btitulo_usuario: u.tituloUsuario,
+    bhabilitado: typeof u.habilitado === 'boolean' ? u.habilitado : !!u.habilitado,
+    dfecha_alta: u.fechaAlta?.toISOString().slice(0, 16),
+    dfecha_baja: u.fechaBaja?.toISOString().slice(0, 16) || '',
+  });
+}
