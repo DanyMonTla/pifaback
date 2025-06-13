@@ -8,6 +8,7 @@ import { InidicadoresModule } from './inidicadores/inidicadores.module';
 import { IndicadoresController } from './indicadores/indicadores.controller';
 import { IndicadoresService } from './indicadores/indicadores.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
+import { ActividadesCulturalesModule } from './ActividadesCulturales/ActividadesCulturales.module';
 
 @Module({
   imports: [
@@ -19,12 +20,13 @@ import { UsuariosModule } from './usuarios/usuarios.module';
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '3306'),
   username: process.env.DB_USERNAME || 'root',
-  password: process.env.DB_PASSWORD || 'pifa123',
-  database: process.env.DB_NAME || 'desa',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'pifa1',
   synchronize: false,
   autoLoadEntities: true,
 }),
 
+    ActividadesCulturalesModule,
     InidicadoresModule,
     UsuariosModule,
   ],
