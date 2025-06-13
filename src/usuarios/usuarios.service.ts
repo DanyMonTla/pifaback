@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosService {
@@ -15,13 +16,16 @@ export class UsuariosService {
   async create(dto: CreateUsuarioDto): Promise<any> {
     console.log("📥 DTO recibido en backend:", dto);
 
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(dto.chashed_password, saltOrRounds);
+
     const nuevo = this.usuarioRepo.create({
-      idUsuario:  dto.cid_usuario,
+      idUsuario: dto.cid_usuario,
       nombreUsuario: dto.cnombre_usuario,
       apellidoP: dto.capellido_p_usuario,
       apellidoM: dto.capellido_m_usuario,
       cargoUsuario: dto.ccargo_usuario,
-      hashedPassword: dto.chashed_password,
+      hashedPassword: hashedPassword,
       idArea: dto.nid_area,
       idRol: dto.nid_rol,
       tituloUsuario: dto.btitulo_usuario,
@@ -69,7 +73,12 @@ export class UsuariosService {
     usuario.apellidoP = dto.capellido_p_usuario ?? usuario.apellidoP;
     usuario.apellidoM = dto.capellido_m_usuario ?? usuario.apellidoM;
     usuario.cargoUsuario = dto.ccargo_usuario ?? usuario.cargoUsuario;
-    usuario.hashedPassword = dto.chashed_password ?? usuario.hashedPassword;
+
+    // ✅ Rehashear si llega nueva contraseña
+    if (dto.chashed_password) {
+      usuario.hashedPassword = await bcrypt.hash(dto.chashed_password, 10);
+    }
+
     usuario.idArea = dto.nid_area ?? usuario.idArea;
     usuario.idRol = dto.nid_rol ?? usuario.idRol;
     usuario.tituloUsuario = dto.btitulo_usuario ?? usuario.tituloUsuario;
@@ -101,7 +110,6 @@ export class UsuariosService {
     return this.mapUsuario(guardado);
   }
 
-  // ✅ NUEVO MÉTODO PARA REACTIVAR USUARIO
   async reactivar(id: string): Promise<any> {
     const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
     if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
@@ -119,13 +127,32 @@ export class UsuariosService {
     return this.mapUsuario(guardado);
   }
 
+  // ✅ Método para validar credenciales
+  async validarCredenciales(cid_usuario: string, password: string): Promise<boolean> {
+  const usuario = await this.usuarioRepo.findOneBy({ idUsuario: cid_usuario });
+  if (!usuario) {
+    console.log('❌ Usuario no encontrado');
+    return false;
+  }
+
+  console.log('🔐 Password recibido:', password);
+  console.log('🧾 Hash en base de datos:', usuario.hashedPassword);
+
+  const coincide = await bcrypt.compare(password, usuario.hashedPassword);
+  console.log('✅ ¿Coincide?', coincide);
+
+  return coincide;
+}
+
+
+  // ✅ mapUsuario ya no expone contraseñas hasheadas
   private mapUsuario = (u: Usuario): any => ({
     cid_usuario: u.idUsuario,
     cnombre_usuario: u.nombreUsuario,
     capellido_p_usuario: u.apellidoP,
     capellido_m_usuario: u.apellidoM,
     ccargo_usuario: u.cargoUsuario,
-    chashed_password: u.hashedPassword,
+    // chashed_password: u.hashedPassword, ❌ eliminado
     nid_area: u.idArea,
     nid_rol: u.idRol,
     btitulo_usuario: u.tituloUsuario,

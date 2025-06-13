@@ -53,4 +53,6 @@ export class CreateUsuarioDto {
   @IsDateString()
   @IsOptional()
   dfecha_baja?: string;
+
+  
 }

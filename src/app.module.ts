@@ -23,6 +23,8 @@ import { TipoIndicadorModule } from './tipo-indicador/tipo-indicador.module';
 import { Clasificacion } from './clasificacion/clasificacion.entity';
 import { ClasificacionModule } from './clasificacion/clasificacion.module';
 
+import { AuthController } from './auth.controller';
+
 
 @Module({
   imports: [
@@ -52,7 +54,8 @@ import { ClasificacionModule } from './clasificacion/clasificacion.module';
     TipoIndicadorModule,
     ClasificacionModule
   ],
-  controllers: [AppController], // SOLO AppController aquí
+  controllers: [AppController, AuthController,], // SOLO AppController aquí
   providers: [AppService], 
 })
 export class AppModule {}
+
