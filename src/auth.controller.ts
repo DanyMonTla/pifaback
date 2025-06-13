@@ -14,6 +14,13 @@ export class AuthController {
       throw new UnauthorizedException('Credenciales incorrectas');
     }
 
-    return { ok: true, mensaje: 'Inicio de sesión exitoso' };
+   const usuario = await this.usuariosService.findOne(cid_usuario);
+    return {
+      ok: true,
+      mensaje: 'Inicio de sesión exitoso',
+      cnombre_usuario: usuario.cnombre_usuario,
+      capellido_p_usuario: usuario.capellido_p_usuario,
+    };
+
   }
 }
