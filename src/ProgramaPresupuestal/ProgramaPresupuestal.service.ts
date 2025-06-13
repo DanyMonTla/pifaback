@@ -1,11 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProgramaPresupuestal } from './ProgramaPresupuestal.entity';
 import { CreateProgramaPresupuestalDto } from './dto/create-ProgramaPresupuestal.dto';
 import { UpdateProgramaPresupuestalDto } from './dto/update-ProgramaPresupuestal.dto';
-import { NotFoundException } from '@nestjs/common';
-
 
 @Injectable()
 export class ProgramaPresupuestalService {
@@ -20,25 +18,24 @@ export class ProgramaPresupuestalService {
   }
 
   async findAll(): Promise<ProgramaPresupuestal[]> {
-  const programas = await this.repo.find();
+    const programas = await this.repo.find();
 
-  // Transformar bit (Buffer) a boolean manualmente
-  return programas.map(p => ({
-    ...p,
-    bhabilitado: Boolean(p.bhabilitado?.[0]), // convierte Buffer [1] a true
-  }));
-}
+    // Transformar bit (Buffer) a boolean manualmente
+    return programas.map(p => ({
+      ...p,
+      bhabilitado: Boolean(p.bhabilitado?.[0]), // convierte Buffer [1] a true
+    }));
+  }
 
   async findOne(id: number): Promise<ProgramaPresupuestal> {
-  const programa = await this.repo.findOneBy({ nid_programa_presupuestal: id });
-  if (!programa) {
-    throw new NotFoundException(`Programa con ID ${id} no encontrado`);
+    const programa = await this.repo.findOneBy({ nid_programa_presupuestal: id });
+    if (!programa) {
+      throw new NotFoundException(`Programa con ID ${id} no encontrado`);
+    }
+    return programa;
   }
-  return programa;
-}
 
-
-  async update(id: number, dto: UpdateProgramaPresupuestalDto): Promise<ProgramaPresupuestal> {
+  async update(id: number, dto: Partial<ProgramaPresupuestal>): Promise<ProgramaPresupuestal> {
     await this.repo.update(id, dto);
     return this.findOne(id);
   }
