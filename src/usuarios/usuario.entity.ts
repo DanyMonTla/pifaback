@@ -8,6 +8,9 @@ export class Usuario {
   @Column({ name: 'CNOMBRE_USUARIO', length: 50 })
   nombreUsuario: string;
 
+  @Column({ name: 'RFC', type: 'varchar', length: 13, nullable: true })
+  rfc: string;
+
   @Column({ name: 'CAPELLIDO_P_USUARIO', length: 25 })
   apellidoP: string;
 

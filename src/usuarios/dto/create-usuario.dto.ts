@@ -17,6 +17,12 @@ export class CreateUsuarioDto {
   @MaxLength(50)
   cnombre_usuario: string;
 
+  @IsOptional()
+  @IsString()
+  @MaxLength(13)
+  rfc?: string;
+
+
   @IsString()
   @MaxLength(25)
   capellido_p_usuario: string;

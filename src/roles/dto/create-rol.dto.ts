@@ -5,7 +5,7 @@ export class CreateRolDto {
   nidRol: number;
 
   @IsString()
-  @MaxLength(10)
+  @MaxLength(25)
   crol: string;
 
   @IsBoolean()

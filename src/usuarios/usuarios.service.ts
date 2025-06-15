@@ -29,6 +29,7 @@ export class UsuariosService {
       idArea: dto.nid_area,
       idRol: dto.nid_rol,
       tituloUsuario: dto.btitulo_usuario,
+      rfc: dto.rfc, // ✅ AGREGA ESTA LÍNEA
       habilitado: dto.bhabilitado ?? true,
       fechaAlta: dto.dfecha_alta && dto.dfecha_alta.trim() !== ''
         ? new Date(dto.dfecha_alta)
@@ -37,6 +38,7 @@ export class UsuariosService {
         ? new Date(dto.dfecha_baja)
         : null,
     });
+
 
     try {
       const guardado = await this.usuarioRepo.save(nuevo);
@@ -52,9 +54,14 @@ export class UsuariosService {
   }
 
   async findAll(): Promise<any[]> {
-    const usuarios = await this.usuarioRepo.find();
-    return usuarios.map(this.mapUsuario);
-  }
+  const usuarios = await this.usuarioRepo.find({
+    order: {
+      idUsuario: 'ASC', // 👈 Orden ascendente por ID
+    },
+  });
+  return usuarios.map(this.mapUsuario);
+}
+
 
   async findOne(id: string): Promise<any> {
     const u = await this.usuarioRepo.findOneBy({ idUsuario: id });
@@ -128,36 +135,43 @@ export class UsuariosService {
   }
 
   // ✅ Método para validar credenciales
-  async validarCredenciales(cid_usuario: string, password: string): Promise<boolean> {
-  const usuario = await this.usuarioRepo.findOneBy({ idUsuario: cid_usuario });
+ async validarCredencialesPorRFC(rfc: string, password: string): Promise<boolean> {
+  const usuario = await this.usuarioRepo.findOneBy({ rfc: rfc }); // asegúrate que el campo se llama así
+
   if (!usuario) {
     console.log('❌ Usuario no encontrado');
     return false;
   }
 
-  console.log('🔐 Password recibido:', password);
-  console.log('🧾 Hash en base de datos:', usuario.hashedPassword);
-
   const coincide = await bcrypt.compare(password, usuario.hashedPassword);
-  console.log('✅ ¿Coincide?', coincide);
-
   return coincide;
 }
+
+  // ✅ Agrega esto al final de UsuariosService
+async findByRFC(rfc: string): Promise<any> {
+  const usuario = await this.usuarioRepo.findOneBy({ rfc });
+  if (!usuario) {
+    throw new NotFoundException(`Usuario con RFC ${rfc} no encontrado`);
+  }
+  return this.mapUsuario(usuario);
+}
+
 
 
   // ✅ mapUsuario ya no expone contraseñas hasheadas
   private mapUsuario = (u: Usuario): any => ({
-    cid_usuario: u.idUsuario,
-    cnombre_usuario: u.nombreUsuario,
-    capellido_p_usuario: u.apellidoP,
-    capellido_m_usuario: u.apellidoM,
-    ccargo_usuario: u.cargoUsuario,
-    // chashed_password: u.hashedPassword, ❌ eliminado
-    nid_area: u.idArea,
-    nid_rol: u.idRol,
-    btitulo_usuario: u.tituloUsuario,
-    bhabilitado: typeof u.habilitado === 'boolean' ? u.habilitado : !!u.habilitado,
-    dfecha_alta: u.fechaAlta?.toISOString().slice(0, 16),
-    dfecha_baja: u.fechaBaja?.toISOString().slice(0, 16) || '',
-  });
+  cid_usuario: u.idUsuario,
+  cnombre_usuario: u.nombreUsuario,
+  capellido_p_usuario: u.apellidoP,
+  capellido_m_usuario: u.apellidoM,
+  ccargo_usuario: u.cargoUsuario,
+  nid_area: u.idArea,
+  nid_rol: u.idRol,
+  btitulo_usuario: u.tituloUsuario,
+  rfc: u.rfc, // ✅ AGREGA ESTA LÍNEA
+  bhabilitado: typeof u.habilitado === 'boolean' ? u.habilitado : !!u.habilitado,
+  dfecha_alta: u.fechaAlta?.toISOString().slice(0, 16),
+  dfecha_baja: u.fechaBaja?.toISOString().slice(0, 16) || '',
+});
+
 }
