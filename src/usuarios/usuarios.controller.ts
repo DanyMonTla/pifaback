@@ -23,7 +23,7 @@ export class UsuariosController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const usuario = await this.service.findOne(id);
+    const usuario = await this.service.findOne(Number(id))
     if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
     return usuario;
   }
@@ -36,7 +36,8 @@ export class UsuariosController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() dto: UpdateUsuarioDto) {
-    return this.service.update(id, dto);
+    return this.service.update(Number(id), dto);
+
   }
 
   @Patch(':id')
@@ -44,7 +45,7 @@ export class UsuariosController {
     @Param('id') id: string,
     @Body() dto: Partial<UpdateUsuarioDto>
   ) {
-    return this.service.update(id, dto);
+    return this.service.update(Number(id), dto);
   }
 
   @Patch('estado/:id') 
@@ -52,12 +53,13 @@ export class UsuariosController {
     @Param('id') id: string,
     @Body() cambios: { bhabilitado: boolean; dfecha_baja: string }
   ) {
-    return this.service.desactivar(id, cambios);
+    return this.service.desactivar(Number(id), cambios);
   }
 
   @Patch('reactivar/:id')
 async reactivar(@Param('id') id: string) {
-  return this.service.reactivar(id);
+  return this.service.reactivar(Number(id));
+
 }
 
 }
