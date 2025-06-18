@@ -1,20 +1,14 @@
-import { IsString, IsInt, MaxLength, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsInt, MaxLength, IsOptional, IsBoolean, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateIndicadorDto {
   @IsInt()
   nid_tipo_indicador: number;
 
-  @IsInt()
-  nid_proyecto_investigacion: number;
 
-  @IsInt()
-  nid_act_cedetec: number;
+ @IsNotEmpty()
+@IsNumber()
+readonly nid_programa_presupuestal: number;
 
-  @IsInt()
-  nid_act_cultural: number;
-
-  @IsInt()
-  nid_programa_presupuestal: number;
 
   @IsString()
   @MaxLength(10)

@@ -31,6 +31,12 @@ export class IndicadoresController {
 async cambiarEstado(@Param('id') id: string, @Body() body: { bhabilitado: number }) {
   return this.service.cambiarEstado(+id, body.bhabilitado);
 }
+@Patch('reactivar/:id')
+async reactivar(@Param('id') id: number) {
+  return this.service.reactivar(id);
+}
+
+
 
   @Put(':id')
   replace(@Param('id') id: string, @Body() dto: UpdateIndicadorDto) {
@@ -41,4 +47,5 @@ async cambiarEstado(@Param('id') id: string, @Body() body: { bhabilitado: number
   remove(@Param('id') id: string) {
     return this.service.remove(Number(id));
   }
+  
 }
