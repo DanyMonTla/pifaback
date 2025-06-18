@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { ProgramaPresupuestal } from 'src/ProgramaPresupuestal/ProgramaPresupuestal.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity({ name: 'TBL_INDICADORES' })
 export class Indicador {
@@ -16,6 +17,7 @@ export class Indicador {
 
   @Column({ name: 'NID_ACT_CULTURAL', type: 'int' })
   nid_act_cultural: number;
+  
 
   @Column({ name: 'NID_PROGRAMA_PRESUPUESTAL', type: 'int' })
   nid_programa_presupuestal: number;
@@ -23,13 +25,12 @@ export class Indicador {
   @Column({ name: 'CCLAVE_INDICADOR', type: 'varchar', length: 10, unique: true })
   cclave_indicador: string;
 
-  @Column({ name: 'CDESC_INDICADOR', type: 'varchar', length: 200 })
-  cdesc_indicador: string;
+@Column({ name: 'CDESC_INDICADOR', type: 'varchar', length: 200, unique: true })
+cdesc_indicador: string;
 
-  @Column({ name: 'CDEFINICION_INDICADOR', type: 'varchar', length: 900 })
-  cdefinicion_indicador: string;
+@Column({ name: 'CDEFINICION_INDICADOR', type: 'varchar', length: 900, unique: true })
+cdefinicion_indicador: string;
 
-  // Elimina NID_FUENTE y agrega CFUENTE:
   @Column({ name: 'CFUENTE', type: 'varchar', length: 500, nullable: true })
   cfuente: string;
 
@@ -49,4 +50,8 @@ export class Indicador {
   dfecha_baja: Date | null;
     @Column({ name: 'NID_CLASIFICACION', type: 'int' })
   nid_clasificacion: number;
+
+  @ManyToOne(() => ProgramaPresupuestal)
+@JoinColumn({ name: 'NID_PROGRAMA_PRESUPUESTAL' })
+programaPresupuestal: ProgramaPresupuestal;
 }

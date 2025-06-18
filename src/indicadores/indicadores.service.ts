@@ -18,10 +18,10 @@ export class IndicadoresService {
     private readonly repo: Repository<Indicador>,
   ) {}
 
-  async findAll() {
-    return await this.repo.find();  // <---- SOLO USA "repo"
-  }
-
+async findAll(): Promise<any[]> {
+  const datos = await this.repo.find();
+  return datos;
+}
   async findOne(id: number): Promise<Indicador> {
     const record = await this.repo.findOne({ where: { nid_indicador: id } });
     if (!record) throw new NotFoundException('Indicador no encontrado');
@@ -42,4 +42,16 @@ export class IndicadoresService {
     const record = await this.findOne(id);
     await this.repo.remove(record);
   }
+  async reactivar(id: number) {
+  const indicador = await this.repo.findOneBy({ nid_indicador: id });
+  if (!indicador) throw new NotFoundException('Indicador no encontrado');
+
+  indicador.bhabilitado = true; // OJO: usa número, no true/false
+  indicador.dfecha_baja = null;
+
+  return this.repo.save(indicador);
+  
+}
+
+
 }
