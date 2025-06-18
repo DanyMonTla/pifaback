@@ -9,13 +9,20 @@ import {
 } from 'class-validator';
 
 export class CreateUsuarioDto {
-  @IsString()
-  @Length(6, 6)
-  cid_usuario: string;
+ 
+  @IsOptional() // opcional si es autogenerado
+  @IsInt()
+  idUsuario?: number;
 
   @IsString()
   @MaxLength(50)
   cnombre_usuario: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(13)
+  rfc?: string;
+
 
   @IsString()
   @MaxLength(25)
@@ -53,4 +60,6 @@ export class CreateUsuarioDto {
   @IsDateString()
   @IsOptional()
   dfecha_baja?: string;
+
+  
 }
