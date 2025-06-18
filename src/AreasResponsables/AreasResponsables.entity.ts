@@ -20,6 +20,7 @@ export class AreaResponsable {
   @Column({ name: 'DFECHA_ALTA', type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   dfecha_alta: Date;
 
-  @Column({ name: 'DFECHA_BAJA', type: 'datetime', nullable: true })
-  dfecha_baja?: Date;
+ @Column({ name: 'DFECHA_BAJA', type: 'datetime', nullable: true })
+  dfecha_baja: Date | null;
+
 }

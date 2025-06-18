@@ -1,12 +1,18 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('TBL_USUARIOS')
+
 export class Usuario {
-  @PrimaryColumn({ name: 'CID_USUARIO', type: 'char', length: 6 })
-  idUsuario: string;
+  
+
+  @PrimaryGeneratedColumn({ name: 'CID_USUARIO', type: 'int' })
+  idUsuario: number;
 
   @Column({ name: 'CNOMBRE_USUARIO', length: 50 })
   nombreUsuario: string;
+
+  @Column({ name: 'RFC', type: 'varchar', length: 13, nullable: true })
+  rfc: string;
 
   @Column({ name: 'CAPELLIDO_P_USUARIO', length: 25 })
   apellidoP: string;

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosService {
@@ -15,16 +16,19 @@ export class UsuariosService {
   async create(dto: CreateUsuarioDto): Promise<any> {
     console.log("📥 DTO recibido en backend:", dto);
 
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(dto.chashed_password, saltOrRounds);
+
     const nuevo = this.usuarioRepo.create({
-      idUsuario:  dto.cid_usuario,
       nombreUsuario: dto.cnombre_usuario,
       apellidoP: dto.capellido_p_usuario,
       apellidoM: dto.capellido_m_usuario,
       cargoUsuario: dto.ccargo_usuario,
-      hashedPassword: dto.chashed_password,
+      hashedPassword: hashedPassword,
       idArea: dto.nid_area,
       idRol: dto.nid_rol,
       tituloUsuario: dto.btitulo_usuario,
+      rfc: dto.rfc,
       habilitado: dto.bhabilitado ?? true,
       fechaAlta: dto.dfecha_alta && dto.dfecha_alta.trim() !== ''
         ? new Date(dto.dfecha_alta)
@@ -41,24 +45,28 @@ export class UsuariosService {
     } catch (err: any) {
       console.error("❌ Error al guardar usuario en la BD:", err);
       if (err.code === 'ER_DATA_TOO_LONG') {
-        throw new BadRequestException('Uno de los campos excede el tamaño permitido.');
+        throw new BadRequestException('Uno de los campos excede el tama\u00f1o permitido.');
       }
       throw err;
     }
   }
 
   async findAll(): Promise<any[]> {
-    const usuarios = await this.usuarioRepo.find();
+    const usuarios = await this.usuarioRepo.find({
+      order: {
+        idUsuario: 'ASC',
+      },
+    });
     return usuarios.map(this.mapUsuario);
   }
 
-  async findOne(id: string): Promise<any> {
+  async findOne(id: number): Promise<any> {
     const u = await this.usuarioRepo.findOneBy({ idUsuario: id });
     if (!u) return null;
     return this.mapUsuario(u);
   }
 
-  async update(id: string, dto: UpdateUsuarioDto): Promise<any> {
+  async update(id: number, dto: UpdateUsuarioDto): Promise<any> {
     const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
     if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
@@ -69,7 +77,11 @@ export class UsuariosService {
     usuario.apellidoP = dto.capellido_p_usuario ?? usuario.apellidoP;
     usuario.apellidoM = dto.capellido_m_usuario ?? usuario.apellidoM;
     usuario.cargoUsuario = dto.ccargo_usuario ?? usuario.cargoUsuario;
-    usuario.hashedPassword = dto.chashed_password ?? usuario.hashedPassword;
+
+    if (dto.chashed_password) {
+      usuario.hashedPassword = await bcrypt.hash(dto.chashed_password, 10);
+    }
+
     usuario.idArea = dto.nid_area ?? usuario.idArea;
     usuario.idRol = dto.nid_rol ?? usuario.idRol;
     usuario.tituloUsuario = dto.btitulo_usuario ?? usuario.tituloUsuario;
@@ -77,50 +89,56 @@ export class UsuariosService {
     usuario.fechaAlta = fechaAlta;
     usuario.fechaBaja = fechaBaja;
 
-    console.log('📝 Guardando usuario actualizado:', usuario);
     const guardado = await this.usuarioRepo.save(usuario);
     return this.mapUsuario(guardado);
   }
 
-  async desactivar(id: string, cambios: { bhabilitado: boolean; dfecha_baja: string }): Promise<any> {
-  const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
-  if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
+  async desactivar(id: number, cambios: { bhabilitado: boolean; dfecha_baja: string }): Promise<any> {
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
-  // 👇 Debug para asegurarte que estás recibiendo lo que esperas
-  console.log("🛠 Cambios recibidos:", cambios);
+    usuario.habilitado = cambios.bhabilitado;
+    usuario.fechaBaja = cambios.dfecha_baja ? new Date(cambios.dfecha_baja) : null;
 
-  // 👇 Asegura que el valor false se respete
-  usuario.habilitado = cambios.bhabilitado;
+    const guardado = await this.usuarioRepo.save(usuario);
+    return this.mapUsuario(guardado);
+  }
 
-  // 👇 Guarda la fecha correctamente
-  usuario.fechaBaja = cambios.dfecha_baja ? new Date(cambios.dfecha_baja) : null;
+  async reactivar(id: number): Promise<any> {
+    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
-  const guardado = await this.usuarioRepo.save(usuario);
+    usuario.habilitado = true;
+    usuario.fechaBaja = null;
 
-  // 👇 Confirma qué se va a guardar
-  console.log("✅ Usuario guardado con:", {
-    id: usuario.idUsuario,
-    habilitado: usuario.habilitado,
-    fechaBaja: usuario.fechaBaja,
-  });
+    const guardado = await this.usuarioRepo.save(usuario);
+    return this.mapUsuario(guardado);
+  }
 
-  return this.mapUsuario(guardado);
-}
+  async validarCredencialesPorRFC(rfc: string, password: string): Promise<boolean> {
+    const usuario = await this.usuarioRepo.findOneBy({ rfc });
+    if (!usuario) return false;
+    return await bcrypt.compare(password, usuario.hashedPassword);
+  }
 
-
+  async findByRFC(rfc: string): Promise<any> {
+    const usuario = await this.usuarioRepo.findOneBy({ rfc });
+    if (!usuario) throw new NotFoundException(`Usuario con RFC ${rfc} no encontrado`);
+    return this.mapUsuario(usuario);
+  }
 
   private mapUsuario = (u: Usuario): any => ({
-  cid_usuario: u.idUsuario,
-  cnombre_usuario: u.nombreUsuario,
-  capellido_p_usuario: u.apellidoP,
-  capellido_m_usuario: u.apellidoM,
-  ccargo_usuario: u.cargoUsuario,
-  chashed_password: u.hashedPassword,
-  nid_area: u.idArea,
-  nid_rol: u.idRol,
-  btitulo_usuario: u.tituloUsuario,
-  bhabilitado: typeof u.habilitado === 'boolean' ? u.habilitado : !!u.habilitado,
-  dfecha_alta: u.fechaAlta?.toISOString().slice(0, 16),
-  dfecha_baja: u.fechaBaja?.toISOString().slice(0, 16) || '',
-});
-} 
+    cid_usuario: u.idUsuario,
+    cnombre_usuario: u.nombreUsuario,
+    capellido_p_usuario: u.apellidoP,
+    capellido_m_usuario: u.apellidoM,
+    ccargo_usuario: u.cargoUsuario,
+    nid_area: u.idArea,
+    nid_rol: u.idRol,
+    btitulo_usuario: u.tituloUsuario,
+    rfc: u.rfc,
+    bhabilitado: !!u.habilitado,
+    dfecha_alta: u.fechaAlta?.toISOString().slice(0, 16),
+    dfecha_baja: u.fechaBaja?.toISOString().slice(0, 16) || '',
+  });
+}

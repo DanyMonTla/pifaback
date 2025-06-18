@@ -5,6 +5,7 @@ import {
   Body,
   Patch,
   Param,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProgramaPresupuestalService } from './ProgramaPresupuestal.service';
 import { CreateProgramaPresupuestalDto } from './dto/create-ProgramaPresupuestal.dto';
@@ -38,9 +39,18 @@ export class ProgramaPresupuestalController {
     return this.service.update(+id, dto);
   }
 
-  // Desactivar un programa (solo cambia bhabilitado a false y asigna fecha de baja)
+  // Desactivar un programa
   @Patch('estado/:id')
   remove(@Param('id') id: string) {
     return this.service.remove(+id);
+  }
+
+  // ✅ Reactivar un programa presupuestal
+  @Patch('reactivar/:id')
+  reactivar(@Param('id') id: string) {
+    return this.service.update(+id, {
+      bhabilitado: true,
+      dfecha_baja: null,
+    });
   }
 }

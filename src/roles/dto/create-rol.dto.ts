@@ -1,8 +1,11 @@
-import { IsString, IsBoolean, IsOptional, IsDateString, MaxLength } from 'class-validator';
+import { IsString, IsBoolean, IsOptional, IsDateString, MaxLength, IsNumber } from 'class-validator';
 
 export class CreateRolDto {
+  @IsNumber()
+  nidRol: number;
+
   @IsString()
-  @MaxLength(10)
+  @MaxLength(25)
   crol: string;
 
   @IsBoolean()

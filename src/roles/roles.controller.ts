@@ -43,4 +43,11 @@ export class RolesController {
 ) {
   return this.rolesService.cambiarEstado(id, estado);
 }
+
+@Patch('reactivar/:id')
+reactivar(@Param('id') id: string) {
+  return this.rolesService.reactivar(+id);
+}
+
+
 }
