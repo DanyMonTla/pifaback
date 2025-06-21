@@ -24,6 +24,7 @@ import { Clasificacion } from './clasificacion/clasificacion.entity';
 import { ClasificacionModule } from './clasificacion/clasificacion.module';
 
 import { AuthController } from './auth.controller';
+import { VinculacionAreaProgramaModule } from './VinculacionAreaPrograma/vinculacion-area-programa.module';
 
 
 @Module({
@@ -38,6 +39,7 @@ import { AuthController } from './auth.controller';
       database: process.env.DB_NAME || 'pifa1', // ← actualizado aquí
       synchronize: false,
       autoLoadEntities: true,
+      
     }),
   
  
@@ -52,7 +54,8 @@ import { AuthController } from './auth.controller';
     TipoCalculoModule,
     FuenteModule,
     TipoIndicadorModule,
-    ClasificacionModule
+    ClasificacionModule,
+    VinculacionAreaProgramaModule,
   ],
   controllers: [AppController, AuthController,], // SOLO AppController aquí
   providers: [AppService], 

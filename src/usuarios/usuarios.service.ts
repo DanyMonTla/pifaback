@@ -77,6 +77,7 @@ export class UsuariosService {
     usuario.apellidoP = dto.capellido_p_usuario ?? usuario.apellidoP;
     usuario.apellidoM = dto.capellido_m_usuario ?? usuario.apellidoM;
     usuario.cargoUsuario = dto.ccargo_usuario ?? usuario.cargoUsuario;
+    usuario.rfc = dto.rfc ?? usuario.rfc;
 
     if (dto.chashed_password) {
       usuario.hashedPassword = await bcrypt.hash(dto.chashed_password, 10);
