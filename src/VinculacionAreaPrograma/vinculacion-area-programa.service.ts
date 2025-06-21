@@ -42,4 +42,18 @@ export class VinculacionAreaProgramaService {
   async obtenerTodas(): Promise<VinculacionAreaPrograma[]> {
     return this.repo.find();
   }
+
+  /** Elimina una vinculación específica */
+  async eliminarVinculacion(nid_area: number, nid_programa_presupuestal: number) {
+  const resultado = await this.repo.delete({ nid_area, nid_programa_presupuestal });
+
+  if (resultado.affected === 0) {
+    throw new BadRequestException(
+      `No se encontró una vinculación con área=${nid_area} y programa=${nid_programa_presupuestal}`,
+    );
+  }
+
+  return { mensaje: 'Vinculación eliminada correctamente' };
+}
+
 }
