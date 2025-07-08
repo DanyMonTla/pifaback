@@ -30,10 +30,10 @@ export class UsuariosService {
       tituloUsuario: dto.btitulo_usuario,
       rfc: dto.rfc,
       habilitado: dto.bhabilitado ?? true,
-      fechaAlta: dto.dfecha_alta && dto.dfecha_alta.trim() !== ''
+      dfecha_alta: dto.dfecha_alta && dto.dfecha_alta.trim() !== ''
         ? new Date(dto.dfecha_alta)
         : new Date(),
-      fechaBaja: dto.dfecha_baja && dto.dfecha_baja.trim() !== ''
+      dfecha_baja: dto.dfecha_baja && dto.dfecha_baja.trim() !== ''
         ? new Date(dto.dfecha_baja)
         : null,
     });
@@ -54,24 +54,24 @@ export class UsuariosService {
   async findAll(): Promise<any[]> {
     const usuarios = await this.usuarioRepo.find({
       order: {
-        idUsuario: 'ASC',
+        cid_usuario: 'ASC',
       },
     });
     return usuarios.map(this.mapUsuario);
   }
 
   async findOne(id: number): Promise<any> {
-    const u = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    const u = await this.usuarioRepo.findOneBy({ cid_usuario: id });
     if (!u) return null;
     return this.mapUsuario(u);
   }
 
   async update(id: number, dto: UpdateUsuarioDto): Promise<any> {
-    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    const usuario = await this.usuarioRepo.findOneBy({ cid_usuario: id });
     if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
-    const fechaAlta = dto.dfecha_alta ? new Date(dto.dfecha_alta) : usuario.fechaAlta;
-    const fechaBaja = dto.dfecha_baja ? new Date(dto.dfecha_baja) : usuario.fechaBaja;
+    const dfecha_alta = dto.dfecha_alta ? new Date(dto.dfecha_alta) : usuario.dfecha_alta;
+    const dfecha_baja = dto.dfecha_baja ? new Date(dto.dfecha_baja) : usuario.dfecha_baja;
 
     usuario.nombreUsuario = dto.cnombre_usuario ?? usuario.nombreUsuario;
     usuario.apellidoP = dto.capellido_p_usuario ?? usuario.apellidoP;
@@ -86,30 +86,30 @@ export class UsuariosService {
     usuario.idRol = dto.nid_rol ?? usuario.idRol;
     usuario.tituloUsuario = dto.btitulo_usuario ?? usuario.tituloUsuario;
     usuario.habilitado = dto.bhabilitado !== undefined ? dto.bhabilitado : usuario.habilitado;
-    usuario.fechaAlta = fechaAlta;
-    usuario.fechaBaja = fechaBaja;
+    usuario.dfecha_alta = dfecha_alta;
+    usuario.dfecha_baja = dfecha_baja;
 
     const guardado = await this.usuarioRepo.save(usuario);
     return this.mapUsuario(guardado);
   }
 
   async desactivar(id: number, cambios: { bhabilitado: boolean; dfecha_baja: string }): Promise<any> {
-    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    const usuario = await this.usuarioRepo.findOneBy({ cid_usuario: id });
     if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
     usuario.habilitado = cambios.bhabilitado;
-    usuario.fechaBaja = cambios.dfecha_baja ? new Date(cambios.dfecha_baja) : null;
+    usuario.dfecha_baja = cambios.dfecha_baja ? new Date(cambios.dfecha_baja) : null;
 
     const guardado = await this.usuarioRepo.save(usuario);
     return this.mapUsuario(guardado);
   }
 
   async reactivar(id: number): Promise<any> {
-    const usuario = await this.usuarioRepo.findOneBy({ idUsuario: id });
+    const usuario = await this.usuarioRepo.findOneBy({ cid_usuario: id });
     if (!usuario) throw new NotFoundException(`Usuario ${id} no encontrado`);
 
     usuario.habilitado = true;
-    usuario.fechaBaja = null;
+    usuario.dfecha_baja = null;
 
     const guardado = await this.usuarioRepo.save(usuario);
     return this.mapUsuario(guardado);
@@ -128,7 +128,7 @@ export class UsuariosService {
   }
 
   private mapUsuario = (u: Usuario): any => ({
-    cid_usuario: u.idUsuario,
+    cid_usuario: u.cid_usuario,
     cnombre_usuario: u.nombreUsuario,
     capellido_p_usuario: u.apellidoP,
     capellido_m_usuario: u.apellidoM,
@@ -138,7 +138,7 @@ export class UsuariosService {
     btitulo_usuario: u.tituloUsuario,
     rfc: u.rfc,
     bhabilitado: !!u.habilitado,
-    dfecha_alta: u.fechaAlta?.toISOString().slice(0, 16),
-    dfecha_baja: u.fechaBaja?.toISOString().slice(0, 16) || '',
+    dfecha_alta: u.dfecha_alta?.toISOString().slice(0, 16),
+    dfecha_baja: u.dfecha_baja?.toISOString().slice(0, 16) || '',
   });
 }

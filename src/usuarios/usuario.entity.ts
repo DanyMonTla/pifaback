@@ -1,12 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { IndicadorUsuario } from '../indicadores/indicador-usuario.entity';
 
 @Entity('TBL_USUARIOS')
-
 export class Usuario {
-  
-
   @PrimaryGeneratedColumn({ name: 'CID_USUARIO', type: 'int' })
-  idUsuario: number;
+  cid_usuario: number;
+
+  @OneToMany(() => IndicadorUsuario, iu => iu.usuario)
+  indicadorUsuarios: IndicadorUsuario[];
 
   @Column({ name: 'CNOMBRE_USUARIO', length: 50 })
   nombreUsuario: string;
@@ -35,15 +36,14 @@ export class Usuario {
   @Column({ name: 'BTITULO_USUARIO', length: 10, nullable: true })
   tituloUsuario?: string;
 
-  
-  
   @Column({name: 'BHABILITADO',type: 'bit',width: 1,default: () => '1',transformer: {to: (value: boolean) => value ? Buffer.from([1]) : Buffer.from([0]),from: (value: Buffer | number) => {if (Buffer.isBuffer(value)) return value[0] === 1;return !!value;},},})
   habilitado: boolean;
 
-
   @Column({ name: 'DFECHA_ALTA', type: 'datetime' })
-  fechaAlta: Date;
+  dfecha_alta: Date;
 
   @Column({ name: 'DFECHA_BAJA', type: 'datetime', nullable: true })
-  fechaBaja?: Date | null;
+  dfecha_baja: Date | null;
+
+  // ...otros campos y relaciones...
 }

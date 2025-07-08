@@ -1,10 +1,13 @@
-import { ProgramaPresupuestal } from 'src/ProgramaPresupuestal/ProgramaPresupuestal.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { IndicadorUsuario } from './indicador-usuario.entity';
 
 @Entity({ name: 'TBL_INDICADORES' })
 export class Indicador {
   @PrimaryGeneratedColumn({ name: 'NID_INDICADOR', type: 'int' })
   nid_indicador: number;
+
+  @OneToMany(() => IndicadorUsuario, iu => iu.indicador)
+  indicadorUsuarios: IndicadorUsuario[];
 
   @Column({ name: 'NID_TIPO_INDICADOR', type: 'int' })
   nid_tipo_indicador: number;
@@ -17,7 +20,6 @@ export class Indicador {
 
   @Column({ name: 'NID_ACT_CULTURAL', type: 'int' })
   nid_act_cultural: number;
-  
 
   @Column({ name: 'NID_PROGRAMA_PRESUPUESTAL', type: 'int' })
   nid_programa_presupuestal: number;
@@ -25,11 +27,11 @@ export class Indicador {
   @Column({ name: 'CCLAVE_INDICADOR', type: 'varchar', length: 10, unique: true })
   cclave_indicador: string;
 
-@Column({ name: 'CDESC_INDICADOR', type: 'varchar', length: 200, unique: true })
-cdesc_indicador: string;
+  @Column({ name: 'CDESC_INDICADOR', type: 'varchar', length: 200, unique: true })
+  cdesc_indicador: string;
 
-@Column({ name: 'CDEFINICION_INDICADOR', type: 'varchar', length: 900, unique: true })
-cdefinicion_indicador: string;
+  @Column({ name: 'CDEFINICION_INDICADOR', type: 'varchar', length: 900, unique: true })
+  cdefinicion_indicador: string;
 
   @Column({ name: 'CFUENTE', type: 'varchar', length: 500, nullable: true })
   cfuente: string;
@@ -48,10 +50,9 @@ cdefinicion_indicador: string;
 
   @Column({ name: 'DFECHA_BAJA', type: 'datetime', nullable: true })
   dfecha_baja: Date | null;
-    @Column({ name: 'NID_CLASIFICACION', type: 'int' })
+
+  @Column({ name: 'NID_CLASIFICACION', type: 'int' })
   nid_clasificacion: number;
 
-  @ManyToOne(() => ProgramaPresupuestal)
-@JoinColumn({ name: 'NID_PROGRAMA_PRESUPUESTAL' })
-programaPresupuestal: ProgramaPresupuestal;
+  // ...otros campos y relaciones...
 }
